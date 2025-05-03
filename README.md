@@ -1,0 +1,2 @@
+# MeetMate
+AI Meeting Summarizer
