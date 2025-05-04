@@ -94,21 +94,27 @@
 
 ## 4 | File / Repo Layout
 
+<pre><code markdown="1">
+## 4 | File / Repo Layout
+
+```text
 meetmate/
 ├── app/
-│   ├── main.py        # FastAPI routes
-│   ├── tasks.py       # background jobs / Celery optional
-│   └── summarizer.py  # Whisper + LangChain logic
+│   ├── main.py          # FastAPI routes
+│   ├── tasks.py         # background jobs / Celery optional
+│   └── summarizer.py    # Whisper + LangChain logic
 ├── dashboards/
 │   └── cost_dashboard.py
 ├── tests/
 │   ├── unit/
 │   └── integration/
 ├── Dockerfile
-├── docker-compose.yml
+├── docker‑compose.yml
 ├── README.md
 └── .github/
-└── workflows/ci.yml
+    └── workflows/ci.yml
+```
+</code></pre>
 
 ---
 
