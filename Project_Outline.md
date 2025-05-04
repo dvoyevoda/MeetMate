@@ -95,8 +95,6 @@
 ## 4 | File / Repo Layout
 
 <pre><code markdown="1">
-## 4 | File / Repo Layout
-
 ```text
 meetmate/
 ├── app/
