@@ -93,3 +93,57 @@
 ---
 
 ## 4 | File / Repo Layout
+
+meetmate/
+├── app/
+│   ├── main.py        # FastAPI routes
+│   ├── tasks.py       # background jobs / Celery optional
+│   └── summarizer.py  # Whisper + LangChain logic
+├── dashboards/
+│   └── cost_dashboard.py
+├── tests/
+│   ├── unit/
+│   └── integration/
+├── Dockerfile
+├── docker-compose.yml
+├── README.md
+└── .github/
+└── workflows/ci.yml
+
+---
+
+## 5 | Stretch Enhancements
+
+| Feature | Benefit |
+|---------|---------|
+| Voice diarisation (speaker labels) | Attribute remarks to speakers. |
+| Auto‑language detection | Whisper language ID → correct model. |
+| Slack slash command `/summarize-latest` | Ad‑hoc summary on demand. |
+| GDPR purge job | Auto‑delete transcripts after 30 days. |
+| Hallucination guard | Reject summaries with > 10 % unmatched text. |
+
+---
+
+## 6 | Project Milestones & Deliverables
+
+| **Stage** | **Deliverable** |
+|-----------|-----------------|
+| **Stage 1** | Live FastAPI endpoint (`/health`) + repo scaffold committed. |
+| **Stage 2** | Recording webhook received and saved to Postgres. |
+| **Stage 3** | Local `.mp4` → JSON transcript pipeline operational. |
+| **Stage 4** | GPT‑4o summary function returns 5 bullets & action items. |
+| **Stage 5** | Digest posting to Slack and Confluence verified end‑to‑end. |
+| **Stage 6** | Streamlit dashboard shows cost & latency metrics. |
+| **Stage 7** | All tests pass; demo video & complete README published.
+
+---
+
+## 7 | README Checklist
+- ✅ 30‑second product pitch  
+- ✅ Quick‑start (`docker compose up`)  
+- ✅ `.env.example` with all required keys  
+- ✅ Architecture diagram (PNG)  
+- ✅ Testing guide (`pytest -q`)  
+- ✅ Demo GIF + Loom walkthrough link  
+
+---
