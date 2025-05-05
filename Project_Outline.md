@@ -95,7 +95,6 @@
 ## 4 | File / Repo Layout
 
 <pre><code markdown="1">
-```text
 meetmate/
 ├── app/
 │   ├── main.py          # FastAPI routes
@@ -111,7 +110,6 @@ meetmate/
 ├── README.md
 └── .github/
     └── workflows/ci.yml
-```
 </code></pre>
 
 ---
