@@ -1,4 +1,5 @@
 *.DS_Store
+Project_Outline.md
 
 # Environment files
 .env
