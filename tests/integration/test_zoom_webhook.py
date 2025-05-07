@@ -20,7 +20,8 @@ def setup_db():
 
 
 def sign_payload(data: bytes) -> str:
-    secret = os.getenv("ZOOM_SIGNING_SECRET")
+    # Use dummy signing secret if not provided in environment
+    secret = os.getenv("ZOOM_SIGNING_SECRET", "testsigningsecret")
     sig = hmac.new(secret.encode(), data, hashlib.sha256).hexdigest()
     return f"sha256={sig}"
 
@@ -28,7 +29,8 @@ def sign_payload(data: bytes) -> str:
 def test_zoom_webhook_records_entry():
     # Construct fake Zoom event
     payload = {
-        "meta": {"token": os.getenv("ZOOM_VERIFICATION_TOKEN")},
+        # Use dummy verification token if not provided in environment
+        "meta": {"token": os.getenv("ZOOM_VERIFICATION_TOKEN", "testverificationtoken")},
         "payload": {
             "object": {
                 "download_url": "https://example.com/fake.mp4",

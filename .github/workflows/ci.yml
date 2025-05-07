@@ -7,6 +7,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "sqlite:///:memory:"
+      ZOOM_SIGNING_SECRET: "testsigningsecret"
+      ZOOM_VERIFICATION_TOKEN: "testverificationtoken"
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
