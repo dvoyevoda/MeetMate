@@ -1,6 +1,11 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
+if not os.getenv("SKIP_DOTENV"):
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        # python-dotenv not installed or skipped
+        pass
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker

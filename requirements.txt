@@ -16,3 +16,4 @@ google-api-python-client>=2.0.0
 google-auth>=2.0.0
 fastapi-utils>=0.2.1
 typing-inspect>=0.4.0
+ffmpeg-python>=0.2.0

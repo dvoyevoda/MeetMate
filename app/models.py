@@ -11,3 +11,4 @@ class Recording(Base):
     recording_url = Column(String)
     received_at = Column(DateTime, default=datetime.datetime.utcnow)
     transcript_fetched = Column(Boolean, default=False)
+    transcript_path = Column(String, nullable=True)

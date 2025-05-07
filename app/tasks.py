@@ -6,6 +6,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from .db import SessionLocal
 from .models import Recording
+from .summarizer import run_transcription_job
 
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
 creds = service_account.Credentials.from_service_account_file(
@@ -28,3 +29,6 @@ def register_tasks(app: FastAPI):
                 db.add(rec)
                 db.commit()
         db.close()
+
+        # Run Whisper transcription for any newly downloaded recordings
+        run_transcription_job()
