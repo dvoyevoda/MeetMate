@@ -4,7 +4,7 @@ python-dotenv>=1.0.0
 streamlit>=1.24.1
 openai>=0.27.0
 langchain>=0.0.275
-openai-whisper>=20230314
+git+https://github.com/openai/whisper.git
 psycopg2-binary>=2.9.6
 slack-sdk>=3.21.2
 requests>=2.31.0

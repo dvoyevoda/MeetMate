@@ -20,7 +20,7 @@ MeetMate is a cross‑platform bot that:
 ## 🏗️ Current Status
 - Project is in early development
 - Core scaffolding and infrastructure are being set up
-- Major features are in progress (see [Project_Outline.md](Project_Outline.md) for roadmap)
+- Major features are in progress (see [Project_Outline.md](docs/Project_Outline.md) for roadmap)
 
 ## 📦 Tech Stack
 - **FastAPI** (Python async backend)
@@ -39,7 +39,7 @@ MeetMate is a cross‑platform bot that:
 - [ ] Cost/latency metrics dashboard
 - [ ] Automated tests and CI
 
-See [Project_Outline.md](Project_Outline.md) for full roadmap and architecture details.
+See [Project_Outline.md](docs/Project_Outline.md) for full roadmap and architecture details.
 
 ---
 

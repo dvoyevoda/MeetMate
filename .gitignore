@@ -22,3 +22,6 @@ dist/
 
 # Docker
 docker-compose.override.yml
+
+# SQLite database files
+*.db

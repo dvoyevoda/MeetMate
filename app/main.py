@@ -6,6 +6,9 @@ from fastapi import Request, HTTPException, Header
 from .db import engine, SessionLocal, Base
 from .models import Recording
 # from .tasks import register_tasks
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
