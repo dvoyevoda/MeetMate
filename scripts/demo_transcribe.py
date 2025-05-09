@@ -4,9 +4,9 @@ import os
 # Ensure project root is on PYTHONPATH
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # Skip loading .env so we don't pick up DATABASE_URL pointing to Postgres
-os.environ["SKIP_DOTENV"] = "1"
+#os.environ["SKIP_DOTENV"] = "1"
 # Override the database URL to use an in-memory SQLite for demo purposes
-os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+#os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 # Provide a dummy OpenAI API key for the demo if not set, to avoid ValueError
 if not os.getenv("OPENAI_API_KEY"):
     print("Warning: OPENAI_API_KEY not found in environment. Using a dummy key for demo.")
@@ -40,6 +40,14 @@ engine = create_engine(
 )
 SessionLocal = sessionmaker(bind=engine)
 Base.metadata.bind = engine # Rebind Base to the new in-memory engine
+
+# Monkey-patch app.db and summarizer to use this in-memory DB
+import app.db as _app_db
+_app_db.engine = engine
+_app_db.SessionLocal = SessionLocal
+
+import app.summarizer as _summ
+_summ.SessionLocal = SessionLocal
 
 # Check if audio_cache directory exists
 if not os.path.exists(AUDIO_DIR):
