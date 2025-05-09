@@ -7,6 +7,8 @@ services:
     depends_on:
       - db
   db:
+    ports:
+      - "5432:5432"
     image: postgres:15
     environment:
       POSTGRES_USER: meetmate

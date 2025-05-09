@@ -12,3 +12,4 @@ class Recording(Base):
     received_at = Column(DateTime, default=datetime.datetime.utcnow)
     transcript_fetched = Column(Boolean, default=False)
     transcript_path = Column(String, nullable=True)
+    summary = Column(String, nullable=True) # Stores the GPT-4o summary
