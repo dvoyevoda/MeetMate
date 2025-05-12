@@ -12,7 +12,7 @@ load_dotenv()
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
-# register_tasks(app)
+# register_tasks(app)  # Google Meet polling disabled since integration is deferred
 
 @app.get("/")
 async def root():

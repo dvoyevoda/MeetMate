@@ -10,7 +10,7 @@
 
 ## 🚀 Project Goals
 MeetMate is a cross‑platform bot that:
-- **Captures** audio/video from Zoom and Google Meet calls
+- **Captures** audio/video from Zoom calls (Google Meet support deferred)
 - **Transcribes** meetings using OpenAI Whisper
 - **Summarizes** with GPT‑4o (via LangChain) into concise bullet points and action items
 - **Delivers** digests to Slack channels/threads and Confluence pages
@@ -32,7 +32,7 @@ MeetMate is a cross‑platform bot that:
 - **Docker** (containerization)
 
 ## 📋 Features (Planned)
-- [ ] Zoom & Google Meet integration
+- [ ] Zoom integration (Google Meet support deferred)
 - [ ] Automated transcription
 - [ ] GPT-4o/LangChain summarization
 - [ ] Slack & Confluence publishing

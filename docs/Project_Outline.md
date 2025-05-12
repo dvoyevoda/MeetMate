@@ -1,5 +1,5 @@
 # MeetMate – AI Meeting Summarizer  
-*A cross‑platform bot that records Zoom / Google Meet calls, transcribes them with Whisper, produces GPT‑4o summaries, and posts digests to Slack & Confluence.*
+*A cross‑platform bot that records Zoom calls (Google Meet support deferred), transcribes them with Whisper, produces GPT‑4o summaries, and posts digests to Slack & Confluence.*
 
 ---
 
@@ -19,13 +19,13 @@
 
 | Layer | Key Services | Notes |
 |-------|--------------|-------|
-| **Capture** | Zoom Recording Webhook, Google Meet “conferenceRecords” API | Poll recording URLs every 60 s. |
+| **Capture** | Zoom Recording Webhook | Poll recording URLs every 60 s. |
 | **Backend API** | **FastAPI** (`/webhook`, `/health`) | Async, high‑throughput. |
 | **Transcription** | **Whisper** (local or OpenAI endpoint) | Multilingual, accurate. |
 | **Summariser** | LangChain `map_reduce` / `refine` chain | Works with GPT‑4o or gpt‑3.5‑turbo. |
 | **Publishers** | Slack Incoming Webhook / Bolt app; Confluence REST API | Slack for chat, Confluence for archives. |
 | **Dashboards** | Streamlit | Cost & latency charts. |
-| **Storage** | Postgres (metadata) • S3 or local FS (audio cache) | Purge audio after transcription for privacy. |
+| **Storage** | Postgres (metadata) • S3 or local FS (audio cache) | Purge audio after transcription for privacy. |
 
 ### 1.2 Data Flow
 1. Meeting ends → recording‑ready webhook fires.  
@@ -61,7 +61,7 @@
 
 ### Phase 2 — Capture & Webhooks
 1. Register Zoom Server‑to‑Server app → handle recording‑completed webhook.  
-2. Enable Google Meet API → poll `conferenceRecords.transcripts`.  
+2. [DEFERRED] Google Meet integration (to be added in a future release).  
 3. Store recording URL & metadata in Postgres.
 
 ### Phase 3 — Transcription
@@ -98,7 +98,6 @@
 meetmate/
 ├── app/
 │   ├── main.py          # FastAPI routes
-│   ├── tasks.py         # background jobs / Celery optional
 │   └── summarizer.py    # Whisper + LangChain logic
 ├── dashboards/
 │   └── cost_dashboard.py

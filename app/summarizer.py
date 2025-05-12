@@ -19,9 +19,10 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.callbacks import get_openai_callback
 
 from .db import SessionLocal
-from .models import Recording
+from .models import Recording, SummaryMetrics
 
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "tiny.en")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o") # Or "gpt-3.5-turbo"
@@ -59,7 +60,7 @@ def extract_audio(video_path: Path, audio_path: Path):
 def transcribe(audio_path: Path) -> dict:
     return model.transcribe(str(audio_path))
 
-def generate_summary(transcript_path: str) -> str:
+def generate_summary(transcript_path: str, recording_id: int = None) -> str:
     # Read API key and model name at runtime to respect environment overrides
     api_key = os.getenv("OPENAI_API_KEY")
     model_name = os.getenv("OPENAI_MODEL", OPENAI_MODEL)
@@ -117,8 +118,29 @@ CONCISE SUMMARY:"""
             input_key="input_documents",
             output_key="output_text",
         )
-        result = chain({"input_documents": docs})
-        return result["output_text"]
+        # Use callback to capture token usage
+        with get_openai_callback() as cb:
+            result = chain({"input_documents": docs})
+        summary_text = result["output_text"]
+        # Record metrics if recording_id provided
+        if recording_id is not None:
+            try:
+                session = SessionLocal()
+                cost_per_token = float(os.getenv("OPENAI_COST_PER_TOKEN", "0"))
+                session.add(SummaryMetrics(
+                    recording_id=recording_id,
+                    prompt_tokens=cb.prompt_tokens,
+                    completion_tokens=cb.completion_tokens,
+                    total_tokens=cb.total_tokens,
+                    cost=cb.total_tokens * cost_per_token
+                ))
+                session.commit()
+            except Exception as e:
+                print(f"Failed to record metrics for {recording_id}: {e}")
+                session.rollback()
+            finally:
+                session.close()
+        return summary_text
 
     except FileNotFoundError:
         return "Error: Transcript file not found."
@@ -160,10 +182,24 @@ def run_transcription_job():
 
                 # Now, attempt to summarize
                 print(f"Generating summary for {rec.meeting_id} using transcript {out_path}")
-                summary_text = generate_summary(str(out_path))
+                summary_text = generate_summary(str(out_path), rec.id)
                 rec.summary = summary_text
                 db.commit()
-                print(f"Summary generated for {rec.meeting_id}: {summary_text[:100]}...") # Print first 100 chars
+                print(f"Summary generated for {rec.meeting_id}: {summary_text[:100]}...")
+
+                # Publish summary to Slack and Confluence
+                try:
+                    from .publishers import publish_to_slack, publish_to_confluence
+                    publish_to_slack(rec.meeting_id, summary_text)
+                    print(f"Posted summary to Slack for {rec.meeting_id}")
+                except Exception as e:
+                    print(f"Failed to post to Slack for {rec.meeting_id}: {e}")
+
+                try:
+                    publish_to_confluence(rec.meeting_id, summary_text, rec.transcript_path)
+                    print(f"Posted summary to Confluence for {rec.meeting_id}")
+                except Exception as e:
+                    print(f"Failed to post to Confluence for {rec.meeting_id}: {e}")
 
         except Exception as e:
             print(f"Failed to process {rec.meeting_id}: {e}")
@@ -178,10 +214,24 @@ def run_transcription_job():
         
         print(f"Attempting to generate summary for previously transcribed recording: {rec.meeting_id}")
         try:
-            summary_text = generate_summary(rec.transcript_path)
+            summary_text = generate_summary(rec.transcript_path, rec.id)
             rec.summary = summary_text
             db.commit()
             print(f"Summary generated for {rec.meeting_id}: {summary_text[:100]}...")
+
+            # Publish summary to Slack and Confluence
+            try:
+                from .publishers import publish_to_slack, publish_to_confluence
+                publish_to_slack(rec.meeting_id, summary_text)
+                print(f"Posted summary to Slack for {rec.meeting_id}")
+            except Exception as e:
+                print(f"Failed to post to Slack for {rec.meeting_id}: {e}")
+
+            try:
+                publish_to_confluence(rec.meeting_id, summary_text, rec.transcript_path)
+                print(f"Posted summary to Confluence for {rec.meeting_id}")
+            except Exception as e:
+                print(f"Failed to post to Confluence for {rec.meeting_id}: {e}")
         except Exception as e:
             print(f"Failed to generate summary for {rec.meeting_id} during catch-up: {e}")
             db.rollback()
